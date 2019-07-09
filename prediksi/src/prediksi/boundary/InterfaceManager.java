@@ -32,7 +32,7 @@ public class InterfaceManager {
     ArrayList<String> newList;
     String[][] rule;
     PSOTsukamotoManager TM;
-    TsukamotoManager F;
+    TsukamotoManager F=new TsukamotoManager();
     int len,testing,training;
     
     public void Load_Data(JTable tbl_data, JTextField Namafile) {
@@ -155,19 +155,35 @@ public class InterfaceManager {
 //        TM.do_hitung_fuzzy_tsukamoto();
 //        TM.agregasi();
         TM.pso_fuzzzifikasi(training,testing);
-        persentase.setText(String.valueOf(TM.get_akurasi() + " %"));
-        String[] hasil_cuaca = TM.Get_Hasil_Cuaca();
+        
+        
+        F.init_rules(rules_dokumen); //passing value to F
+        F.init_cuaca(data_cuaca);
+        F.set_anggota_lama(TM.get_anggota_lama());
+        F.do_fuzzyfikasi(training,testing);
+        F.do_hitung_fuzzy_tsukamoto(training,testing);
+        persentase.setText(String.valueOf(F.agregasi(training,testing) + " %"));
+        String[] hasilcuaca = F.get_hasil_cuaca();
+                //persentase.setText(String.valueOf(TM.get_akurasi() + " %"));
+                //String[] hasil_cuaca = TM.Get_Hasil_Cuaca();
         //show to table
-        DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
+                //DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
         
 //        len = hasil_cuaca.length;
 //        System.out.println("Banyak data = "+len);
 //        testing = (int) Math.round(0.3 * len);
 //        training = (len) - testing;
 //        System.out.println("Training = "+training +" /n Testing = "+testing);
-        for(i=0;i<hasil_cuaca.length;i++){
+            //    for(i=0;i<hasil_cuaca.length;i++){
 //            System.out.println(hasil_cuaca[i]);
-            cuaca_model.setValueAt(hasil_cuaca[i], i, 8);
+            //        cuaca_model.setValueAt(hasil_cuaca[i], i, 8);
+            //}
+            
+            DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
+       
+        for(i=0;i<hasilcuaca.length;i++){
+//            System.out.println(hasilcuaca[i]);
+            cuaca_model.setValueAt(hasilcuaca[i], i, 8);
         }
     }
 

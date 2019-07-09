@@ -62,6 +62,11 @@ public class TsukamotoManager {
     public void init_cuaca(ArrayList<Cuaca> data_cuaca) {
         this.data_cuaca = data_cuaca;
     }
+    
+    public void set_anggota_lama(double[] f_anggota_lama)
+    {
+        this.f_anggota_lama = f_anggota_lama; 
+    }
 
     public void do_fuzzyfikasi(int training, int testing) {
         //DecimalFormat format = new DecimalFormat("####,##");

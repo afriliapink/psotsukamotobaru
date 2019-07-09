@@ -36,6 +36,7 @@ public class PSOTsukamotoManager {
     ArrayList<Cuaca> data_cuaca;
     ArrayList<ArrayList> rules;
     ArrayList<double[][]> f_anggota_cuaca_swarm;
+    ArrayList<double[][]> f_anggota_cuaca_baru;
     ArrayList<ArrayList> listm_keanggotaan_swarm;
 
     public PSOTsukamotoManager(int jumlah_swarm, double c1, double c2, int jumlah_iterasi) {
@@ -355,7 +356,7 @@ public class PSOTsukamotoManager {
 
         listm_keanggotaan_swarm = new ArrayList<>();
 
-        for (int i = 0; i < f_anggota_cuaca_swarm.size(); i++) {
+        for (int i = 0; i < jumlah_swarm; i++) {
             f_anggota_cuaca = f_anggota_cuaca_swarm.get(i);
             listm_keanggotaan = new ArrayList<>();
 
@@ -467,27 +468,31 @@ public class PSOTsukamotoManager {
                 x3 = 0;
                 x4 = 0;
                 for (int k = 0; k < m_keanggotan_rule.length; k++) {
-                    if (data_cuaca.get(j).getKeadaan_cuaca().equals("Rain")) {
-                        z = z + (m_keanggotan_rule[k][4] * hujan);
-                    } else if (data_cuaca.get(j).getKeadaan_cuaca().equals("Light Rain")) {
-                        z = z + (m_keanggotan_rule[k][4] * hujan_ringan);
-                    } else if (data_cuaca.get(j).getKeadaan_cuaca().equals("Cloudy")) {
-                        z = z + (m_keanggotan_rule[k][4] * berawan);
+                    if (rules.get(k).get(4).equals("Rain")) {
+                        z = (m_keanggotan_rule[k][4] * hujan);
+                    } else if (rules.get(k).get(4).equals("Light Rain")) {
+                        z = (m_keanggotan_rule[k][4] * hujan_ringan);
+                    } else if (rules.get(k).get(4).equals("Cloudy")) {
+                        z = (m_keanggotan_rule[k][4] * berawan);
                     } else {
-                        z = z + (m_keanggotan_rule[k][4] * cerah);
+                        z = (m_keanggotan_rule[k][4] * cerah);
                     }
 
-                    total = total + m_keanggotan_rule[k][4];
+                    total = total + z ;
                 }
 
-                z = Double.parseDouble(String.format("%.2f", z).replace(",", "."));
-                total = Double.parseDouble(String.format("%.2f", total).replace(",", "."));
+                double temp = 0;
 
-                System.out.println("nilai z : " + z);
-                System.out.println("nilai total : " + total);
+                for (int k = 0; k < m_keanggotan_rule.length; k++) {
+//                    System.out.println("m = "+m_keanggotaan[k][4]);
+                    temp = temp + m_keanggotan_rule[k][4];
+                }
 
-                z = z / total;
-                System.out.println("nilai z : " + z);
+                //System.out.println("nilai z : " + z);
+                //System.out.println("temp : " + temp);
+
+                z = total/temp;
+                //System.out.println("nilai z : " + z);
 
                 if (z >= 0 && z < 2) {
                 if (z <= 0) {
@@ -575,11 +580,12 @@ public class PSOTsukamotoManager {
         do_hitung_fuzzy_tsukamoto();
         akurasi_before = agregasi();
         double temp = 0;
-        int i;
+        int i, index = 0;
         init_kecepatan();
         init_pbest();
         init_gbest(akurasi_before);
-
+        ArrayList<double []> a=new ArrayList<>();
+           f_anggota_cuaca_baru=new ArrayList<>();
         for (i = 0; i < jumlah_iterasi; i++) {
             menghitung_nilai_w(i);
             menghitung_nilai_r();
@@ -589,7 +595,9 @@ public class PSOTsukamotoManager {
             do_fuzzyfikasi(training,testing);
             do_hitung_fuzzy_tsukamoto();
             akurasi_current = agregasi();
-
+            if(max_akurasi!=akurasi_current){
+             index=i;   
+            }
             menentukan_pbest(akurasi_before, akurasi_current);
             menentukan_gbest(akurasi_before, akurasi_current);
             System.out.println("nilai w : " + w);
@@ -597,9 +605,22 @@ public class PSOTsukamotoManager {
             System.out.println("nilai r2 : " + r2);
             max_akurasi = akurasi_current;
         }
-
+       
+        System.out.println("index");
+        System.out.println(index);
+       
+            for (int k = 0; k <f_anggota_lama.length; k++) {
+                    System.out.print(f_anggota_cuaca_baru.get(index)[0][k]+"\t");
+                    f_anggota_lama[k] = f_anggota_cuaca_baru.get(index)[0][k];
+            }
+            System.out.println("");
     }
 
+    public double[] get_anggota_lama()
+    {
+        return f_anggota_lama;
+    }
+    
     public double get_akurasi() {
         double temp = 0;
         int i;
@@ -719,6 +740,7 @@ public class PSOTsukamotoManager {
     }
 
     public void menghitung_x() {
+     
 //+++++++++++++++ Perulangan untuk setiap populasi pada setiap data ++++++++++++++++            
         for (int i = 0; i < jumlah_swarm; i++) {
             for (int j = 0; j < 12; j++) {
@@ -726,5 +748,6 @@ public class PSOTsukamotoManager {
                 System.out.println("nilai anggota swarm[" + i + "][" + j + "] :" + f_anggota_swarm[i][j]);
             }
         }
+        f_anggota_cuaca_baru.add(f_anggota_swarm);
     }
 }
