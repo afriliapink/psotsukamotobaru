@@ -54,9 +54,9 @@ public class TsukamotoManager {
         this.rules = rule;
         int i, j;
         for (ArrayList k : rules) {
-            System.out.println(k);
+            //System.out.println(k);
         }
-        System.out.println("");
+        //System.out.println("");
     }
 
     public void init_cuaca(ArrayList<Cuaca> data_cuaca) {
@@ -204,8 +204,8 @@ public class TsukamotoManager {
 
         ArrayList<Double[][]> listm_keanggotan;
         f_anggota_cuaca = new double[f_keanggotaan_cuaca.length][f_keanggotaan_cuaca[0].length];
-        System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca.length); //jumlah swarm
-        System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca[0].length); // jumlah data
+        //System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca.length); //jumlah swarm
+        //System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca[0].length); // jumlah data
         m_keanggotaan_baru = new ArrayList<>();
         hasil_cuaca = new String[testing];
         for (int i = 0; i < testing; i++) {
@@ -298,8 +298,8 @@ public class TsukamotoManager {
         x4 = 0;
 
         
-        System.out.println("m_keanggotaan rule1 : " + m_keanggotaan.length);
-        System.out.println("m_keanggotaan rule2 : " + m_keanggotaan[0].length);
+        //System.out.println("m_keanggotaan rule1 : " + m_keanggotaan.length);
+        //System.out.println("m_keanggotaan rule2 : " + m_keanggotaan[0].length);
 //        for (int a = 0; a < testing; a++) {
 //            m_keanggotan_rule = m_keanggotaan_baru.get(a);
 //            System.out.println("data ke" + (a+1));
@@ -313,7 +313,7 @@ public class TsukamotoManager {
 //        }
         int count = training;
         for (int i = 0; i < testing; i++) {
-            System.out.println("data ke : " + (i+1));
+            //System.out.println("data ke : " + (i+1));
             total = 0;
             z = 0;
             m_keanggotan_rule = m_keanggotaan_baru.get(i);
@@ -340,14 +340,14 @@ public class TsukamotoManager {
                 temp = temp + m_keanggotan_rule[k][4];
             }
 
-            System.out.println("total = " + total);
-            System.out.println("temp = " + temp);
+            //System.out.println("total = " + total);
+            //System.out.println("temp = " + temp);
 //            z = Double.parseDouble(String.format("%.2f", z).replace(",", "."));
 //            total = Double.parseDouble(String.format("%.2f", total).replace(",", "."));
 
             z = total / temp;
 
-            System.out.println("nilai z : " + z);
+            //System.out.println("nilai z : " + z);
 //            if (z <= 0 && z <= 4) {
 //                if (z <= 2) {
 //                    x1 = 1;
@@ -426,7 +426,7 @@ public class TsukamotoManager {
             } else {
                 hasil_cuaca[i] = "Rain";
             }
-            System.out.println(hasil_cuaca[i]);
+            //System.out.println(hasil_cuaca[i]);
             if (data_cuaca.get(count).getKeadaan_cuaca().equals(hasil_cuaca[i])) {
                 tingkat_akurasi++;
             }
@@ -434,7 +434,7 @@ public class TsukamotoManager {
         }
         tingkat_akurasi = (tingkat_akurasi / testing) * 100;
         tingkat_akurasi = Double.parseDouble(String.format("%.3f", tingkat_akurasi).replace(",", "."));
-        System.out.println("tingkat akurasi = " + tingkat_akurasi);
+        //System.out.println("tingkat akurasi = " + tingkat_akurasi);
         return tingkat_akurasi;
     }
 

@@ -18,14 +18,14 @@ import prediksi.entity.Cuaca;
 public class PSOTsukamotoManager {
 
     double[][] f_anggota_swarm;
-    double[] f_anggota_lama, max_akurasi;
+    double[] f_anggota_lama;
     int min_suhu, min_kelembaban, min_tekanan_udara;
     int min_kecepatan_angin, max_suhu, max_kelembaban;
     int max_tekanan_udara, max_kecepatan_angin;
     int cerah, berawan, hujan_ringan, hujan;
     int jumlah_swarm, jumlah_iterasi, v0, iterasi;
     double wmax, wmin, r1, r2, c1, c2;
-    double w;
+    double w, max_akurasi;
     double[][] v;
     double[][] pbest, pbest_before;
     double[] gbest;
@@ -72,6 +72,7 @@ public class PSOTsukamotoManager {
         this.jumlah_iterasi = jumlah_iterasi;
         this.c1 = c1;
         this.c2 = c2;
+        max_akurasi = -1;
     }
 
     public void init_data_cuaca(ArrayList<Cuaca> data_cuaca) {
@@ -210,7 +211,6 @@ public class PSOTsukamotoManager {
         double[][] f_keanggotaan_cuaca;
         DecimalFormat format = new DecimalFormat("####,##");
         Cuaca cuaca;
-        int count = 0; 
 
         f_anggota_cuaca_swarm = new ArrayList<>();
 
@@ -222,109 +222,109 @@ public class PSOTsukamotoManager {
 
 //========================Fuzzyfikasi Suhu==========================================  
 //      ++++++++++++++ Suhu Dingin ++++++++++++++++++++++++++++++++++++++++++++  
-                if (data_cuaca.get(count).getSuhu() <= f_anggota_swarm[i][0]) {
+                if (data_cuaca.get(j).getSuhu() <= f_anggota_swarm[i][0]) {
                     f_keanggotaan_cuaca[j][0] = 1;
-                } else if (data_cuaca.get(count).getSuhu() > f_anggota_swarm[i][0] && data_cuaca.get(count).getSuhu() < f_anggota_swarm[i][1]) {
-                    f_keanggotaan_cuaca[j][0] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][1] - data_cuaca.get(count).getSuhu()) / (f_anggota_swarm[i][1] - f_anggota_swarm[i][0])).replace(",", "."));
+                } else if (data_cuaca.get(j).getSuhu() > f_anggota_swarm[i][0] && data_cuaca.get(j).getSuhu() < f_anggota_swarm[i][1]) {
+                    f_keanggotaan_cuaca[j][0] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][1] - data_cuaca.get(j).getSuhu()) / (f_anggota_swarm[i][1] - f_anggota_swarm[i][0])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][0] = 0;
                 }
 
 //      +++++++++++++ Suhu Hangat ++++++++++++++++++++++++++++++++++++++++++++++                    
-                if (data_cuaca.get(count).getSuhu() > f_anggota_swarm[i][0] && data_cuaca.get(count).getSuhu() <= f_anggota_swarm[i][1]) {
-                    f_keanggotaan_cuaca[j][1] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getSuhu() - f_anggota_swarm[i][0]) / (f_anggota_swarm[i][1] - f_anggota_swarm[i][0])).replace(",", "."));
-                } else if (data_cuaca.get(count).getSuhu() > f_anggota_swarm[i][1] && data_cuaca.get(count).getSuhu() <= f_anggota_swarm[i][2]) {
-                    f_keanggotaan_cuaca[j][1] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][2] - data_cuaca.get(count).getSuhu()) / (f_anggota_swarm[i][2] - f_anggota_swarm[i][1])).replace(",", "."));
+                if (data_cuaca.get(j).getSuhu() > f_anggota_swarm[i][0] && data_cuaca.get(j).getSuhu() <= f_anggota_swarm[i][1]) {
+                    f_keanggotaan_cuaca[j][1] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getSuhu() - f_anggota_swarm[i][0]) / (f_anggota_swarm[i][1] - f_anggota_swarm[i][0])).replace(",", "."));
+                } else if (data_cuaca.get(j).getSuhu() > f_anggota_swarm[i][1] && data_cuaca.get(j).getSuhu() <= f_anggota_swarm[i][2]) {
+                    f_keanggotaan_cuaca[j][1] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][2] - data_cuaca.get(j).getSuhu()) / (f_anggota_swarm[i][2] - f_anggota_swarm[i][1])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][1] = 0;
                 }
 
 //      +++++++++++++ Suhu Panas ++++++++++++++++++++++++++++++++++++++++++++++                 
-                if (data_cuaca.get(count).getSuhu() <= f_anggota_swarm[i][1]) {
+                if (data_cuaca.get(j).getSuhu() <= f_anggota_swarm[i][1]) {
                     f_keanggotaan_cuaca[j][2] = 0;
-                } else if (data_cuaca.get(count).getSuhu() > f_anggota_swarm[i][1] && data_cuaca.get(count).getSuhu() <= f_anggota_swarm[i][2]) {
-                    f_keanggotaan_cuaca[j][2] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getSuhu() - f_anggota_swarm[i][1]) / (f_anggota_swarm[i][2] - f_anggota_swarm[i][1])).replace(",", "."));
+                } else if (data_cuaca.get(j).getSuhu() > f_anggota_swarm[i][1] && data_cuaca.get(j).getSuhu() <= f_anggota_swarm[i][2]) {
+                    f_keanggotaan_cuaca[j][2] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getSuhu() - f_anggota_swarm[i][1]) / (f_anggota_swarm[i][2] - f_anggota_swarm[i][1])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][2] = 1;
                 }
 
 //      +++++++++++++ Kelembaban Dry ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getKelembaban() <= f_anggota_swarm[i][3]) {
+                if (data_cuaca.get(j).getKelembaban() <= f_anggota_swarm[i][3]) {
                     f_keanggotaan_cuaca[j][3] = 1;
-                } else if (data_cuaca.get(count).getKelembaban() > f_anggota_swarm[i][3] && data_cuaca.get(count).getKelembaban() < f_anggota_swarm[i][4]) {
-                    f_keanggotaan_cuaca[j][3] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][4] - data_cuaca.get(count).getKelembaban()) / (f_anggota_swarm[i][4] - f_anggota_swarm[i][3])).replace(",", "."));
+                } else if (data_cuaca.get(j).getKelembaban() > f_anggota_swarm[i][3] && data_cuaca.get(j).getKelembaban() < f_anggota_swarm[i][4]) {
+                    f_keanggotaan_cuaca[j][3] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][4] - data_cuaca.get(j).getKelembaban()) / (f_anggota_swarm[i][4] - f_anggota_swarm[i][3])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][3] = 0;
                 }
 
 //      +++++++++++++ Kelembaban Wet ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getKelembaban() > f_anggota_swarm[i][3] && data_cuaca.get(count).getKelembaban() <= f_anggota_swarm[i][4]) {
-                    f_keanggotaan_cuaca[j][4] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getKelembaban() - f_anggota_swarm[i][3]) / (f_anggota_swarm[i][4] - f_anggota_swarm[i][3])).replace(",", "."));
-                } else if (data_cuaca.get(count).getKelembaban() > f_anggota_swarm[i][4] && data_cuaca.get(count).getKelembaban() <= f_anggota_swarm[i][5]) {
-                    f_keanggotaan_cuaca[j][4] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][5] - data_cuaca.get(count).getKelembaban()) / (f_anggota_swarm[i][5] - f_anggota_swarm[i][4])).replace(",", "."));
+                if (data_cuaca.get(j).getKelembaban() > f_anggota_swarm[i][3] && data_cuaca.get(j).getKelembaban() <= f_anggota_swarm[i][4]) {
+                    f_keanggotaan_cuaca[j][4] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getKelembaban() - f_anggota_swarm[i][3]) / (f_anggota_swarm[i][4] - f_anggota_swarm[i][3])).replace(",", "."));
+                } else if (data_cuaca.get(j).getKelembaban() > f_anggota_swarm[i][4] && data_cuaca.get(j).getKelembaban() <= f_anggota_swarm[i][5]) {
+                    f_keanggotaan_cuaca[j][4] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][5] - data_cuaca.get(j).getKelembaban()) / (f_anggota_swarm[i][5] - f_anggota_swarm[i][4])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][4] = 0;
                 }
 
 //      +++++++++++++ Kelembaban Moist ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getKelembaban() <= f_anggota_swarm[i][4]) {
+                if (data_cuaca.get(j).getKelembaban() <= f_anggota_swarm[i][4]) {
                     f_keanggotaan_cuaca[j][5] = 0;
-                } else if (data_cuaca.get(count).getKelembaban() > f_anggota_swarm[i][4] && data_cuaca.get(count).getKelembaban() <= f_anggota_swarm[i][5]) {
-                    f_keanggotaan_cuaca[j][5] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getKelembaban() - f_anggota_swarm[i][4]) / (f_anggota_swarm[i][5] - f_anggota_swarm[i][4])).replace(",", "."));
+                } else if (data_cuaca.get(j).getKelembaban() > f_anggota_swarm[i][4] && data_cuaca.get(j).getKelembaban() <= f_anggota_swarm[i][5]) {
+                    f_keanggotaan_cuaca[j][5] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getKelembaban() - f_anggota_swarm[i][4]) / (f_anggota_swarm[i][5] - f_anggota_swarm[i][4])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][5] = 1;
                 }
 
 //      +++++++++++++ Tekanan Udara Rendah ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getTekanan_udara() <= f_anggota_swarm[i][6]) {
+                if (data_cuaca.get(j).getTekanan_udara() <= f_anggota_swarm[i][6]) {
                     f_keanggotaan_cuaca[j][6] = 1;
-                } else if (data_cuaca.get(count).getTekanan_udara() > f_anggota_swarm[i][6] && data_cuaca.get(count).getTekanan_udara() < f_anggota_swarm[i][7]) {
-                    f_keanggotaan_cuaca[j][6] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][7] - data_cuaca.get(count).getTekanan_udara()) / (f_anggota_swarm[i][7] - f_anggota_swarm[i][6])).replace(",", "."));
+                } else if (data_cuaca.get(j).getTekanan_udara() > f_anggota_swarm[i][6] && data_cuaca.get(j).getTekanan_udara() < f_anggota_swarm[i][7]) {
+                    f_keanggotaan_cuaca[j][6] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][7] - data_cuaca.get(j).getTekanan_udara()) / (f_anggota_swarm[i][7] - f_anggota_swarm[i][6])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][6] = 0;
                 }
 
 //      +++++++++++++ Tekanan Udara Sedang ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getTekanan_udara() > f_anggota_swarm[i][6] && data_cuaca.get(count).getTekanan_udara() <= f_anggota_swarm[i][7]) {
-                    f_keanggotaan_cuaca[j][7] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getTekanan_udara() - f_anggota_swarm[i][6]) / (f_anggota_swarm[i][7] - f_anggota_swarm[i][6])).replace(",", "."));
-                } else if (data_cuaca.get(count).getTekanan_udara() > f_anggota_swarm[i][7] && data_cuaca.get(count).getTekanan_udara() <= f_anggota_swarm[i][8]) {
-                    f_keanggotaan_cuaca[j][7] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][8] - data_cuaca.get(count).getTekanan_udara()) / (f_anggota_swarm[i][8] - f_anggota_swarm[i][7])).replace(",", "."));
+                if (data_cuaca.get(j).getTekanan_udara() > f_anggota_swarm[i][6] && data_cuaca.get(j).getTekanan_udara() <= f_anggota_swarm[i][7]) {
+                    f_keanggotaan_cuaca[j][7] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getTekanan_udara() - f_anggota_swarm[i][6]) / (f_anggota_swarm[i][7] - f_anggota_swarm[i][6])).replace(",", "."));
+                } else if (data_cuaca.get(j).getTekanan_udara() > f_anggota_swarm[i][7] && data_cuaca.get(j).getTekanan_udara() <= f_anggota_swarm[i][8]) {
+                    f_keanggotaan_cuaca[j][7] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][8] - data_cuaca.get(j).getTekanan_udara()) / (f_anggota_swarm[i][8] - f_anggota_swarm[i][7])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][7] = 0;
                 }
 
 //      +++++++++++++ Tekanan Udara Tinggi ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getTekanan_udara() <= f_anggota_swarm[i][7]) {
+                if (data_cuaca.get(j).getTekanan_udara() <= f_anggota_swarm[i][7]) {
                     f_keanggotaan_cuaca[j][8] = 0;
-                } else if (data_cuaca.get(count).getTekanan_udara() > f_anggota_swarm[i][7] && data_cuaca.get(count).getTekanan_udara() <= f_anggota_swarm[i][8]) {
-                    f_keanggotaan_cuaca[j][8] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getTekanan_udara() - f_anggota_swarm[i][7]) / (f_anggota_swarm[i][8] - f_anggota_swarm[i][7])).replace(",", "."));
+                } else if (data_cuaca.get(j).getTekanan_udara() > f_anggota_swarm[i][7] && data_cuaca.get(j).getTekanan_udara() <= f_anggota_swarm[i][8]) {
+                    f_keanggotaan_cuaca[j][8] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getTekanan_udara() - f_anggota_swarm[i][7]) / (f_anggota_swarm[i][8] - f_anggota_swarm[i][7])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][8] = 1;
                 }
 
 //      +++++++++++++ Kecapatan Angin Sedang ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getKecepatan_angin() <= f_anggota_swarm[i][9]) {
+                if (data_cuaca.get(j).getKecepatan_angin() <= f_anggota_swarm[i][9]) {
                     f_keanggotaan_cuaca[j][9] = 1;
-                } else if (data_cuaca.get(count).getKecepatan_angin() > f_anggota_swarm[i][9] && data_cuaca.get(count).getKecepatan_angin() < f_anggota_swarm[i][10]) {
-                    f_keanggotaan_cuaca[j][9] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][10] - data_cuaca.get(count).getKecepatan_angin()) / (f_anggota_swarm[i][10] - f_anggota_swarm[i][9])).replace(",", "."));
+                } else if (data_cuaca.get(j).getKecepatan_angin() > f_anggota_swarm[i][9] && data_cuaca.get(j).getKecepatan_angin() < f_anggota_swarm[i][10]) {
+                    f_keanggotaan_cuaca[j][9] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][10] - data_cuaca.get(j).getKecepatan_angin()) / (f_anggota_swarm[i][10] - f_anggota_swarm[i][9])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][9] = 0;
                 }
 
 //      +++++++++++++ Kecepatan Angin Kencang ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getKecepatan_angin() > f_anggota_swarm[i][9] && data_cuaca.get(count).getKecepatan_angin() <= f_anggota_swarm[i][10]) {
-                    f_keanggotaan_cuaca[j][10] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getKecepatan_angin() - f_anggota_swarm[i][9]) / (f_anggota_swarm[i][10] - f_anggota_swarm[i][9])).replace(",", "."));
-                } else if (data_cuaca.get(count).getKecepatan_angin() > f_anggota_swarm[i][10] && data_cuaca.get(count).getKecepatan_angin() <= f_anggota_swarm[i][11]) {
-                    f_keanggotaan_cuaca[j][10] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][11] - data_cuaca.get(count).getKecepatan_angin()) / (f_anggota_swarm[i][11] - f_anggota_swarm[i][10])).replace(",", "."));
+                if (data_cuaca.get(j).getKecepatan_angin() > f_anggota_swarm[i][9] && data_cuaca.get(j).getKecepatan_angin() <= f_anggota_swarm[i][10]) {
+                    f_keanggotaan_cuaca[j][10] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getKecepatan_angin() - f_anggota_swarm[i][9]) / (f_anggota_swarm[i][10] - f_anggota_swarm[i][9])).replace(",", "."));
+                } else if (data_cuaca.get(j).getKecepatan_angin() > f_anggota_swarm[i][10] && data_cuaca.get(j).getKecepatan_angin() <= f_anggota_swarm[i][11]) {
+                    f_keanggotaan_cuaca[j][10] = Double.parseDouble(String.format("%.2f", (f_anggota_swarm[i][11] - data_cuaca.get(j).getKecepatan_angin()) / (f_anggota_swarm[i][11] - f_anggota_swarm[i][10])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][10] = 0;
                 }
 
 //      +++++++++++++ Kecepatan Angin Sangat Kencang ++++++++++++++++++++++++++++++++++++++++++++++ 
-                if (data_cuaca.get(count).getKecepatan_angin() <= f_anggota_swarm[i][10]) {
+                if (data_cuaca.get(j).getKecepatan_angin() <= f_anggota_swarm[i][10]) {
                     f_keanggotaan_cuaca[j][11] = 0;
-                } else if (data_cuaca.get(count).getKecepatan_angin() > f_anggota_swarm[i][10] && data_cuaca.get(count).getKecepatan_angin() <= f_anggota_swarm[i][11]) {
-                    f_keanggotaan_cuaca[j][11] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(count).getKecepatan_angin() - f_anggota_swarm[i][10]) / (f_anggota_swarm[i][11] - f_anggota_swarm[i][10])).replace(",", "."));
+                } else if (data_cuaca.get(j).getKecepatan_angin() > f_anggota_swarm[i][10] && data_cuaca.get(j).getKecepatan_angin() <= f_anggota_swarm[i][11]) {
+                    f_keanggotaan_cuaca[j][11] = Double.parseDouble(String.format("%.2f", (data_cuaca.get(j).getKecepatan_angin() - f_anggota_swarm[i][10]) / (f_anggota_swarm[i][11] - f_anggota_swarm[i][10])).replace(",", "."));
                 } else {
                     f_keanggotaan_cuaca[j][11] = 1;
                 }
@@ -332,9 +332,9 @@ public class PSOTsukamotoManager {
             //System.out.println("swarm ke-" + (i + 1) + " ");
             //System.out.println("Fuzzifikasi : ");
             for (int j = 0; j < training; j++) {
-                System.out.print("Data " + (j + 1) + " ");
+                //System.out.print("Data " + (j + 1) + " ");
                 for (int k = 0; k < 12; k++) {
-              //      System.out.print(f_keanggotaan_cuaca[j][k] + " ");
+                    //System.out.print(f_keanggotaan_cuaca[j][k] + " ");
                 }
                 //System.out.println();
             }
@@ -357,12 +357,12 @@ public class PSOTsukamotoManager {
         listm_keanggotaan_swarm = new ArrayList<>();
 
         for (int i = 0; i < jumlah_swarm; i++) {
-          //  System.out.println("swarm ke: " +(i+1)) ;
+            //System.out.println("swarm ke: " +(i+1)) ;
             f_anggota_cuaca = f_anggota_cuaca_swarm.get(i);
             listm_keanggotaan = new ArrayList<>();
 
             for (int j = 0; j < f_anggota_cuaca.length; j++) {
-                System.out.println("data ke : " + (j+1));
+                //System.out.println("data ke : " + (j+1));
                 m_keanggotaan = new double[rules.size()][rules.get(0).size()];
 
                 for (int k = 0; k < rules.size(); k++) {
@@ -423,7 +423,7 @@ public class PSOTsukamotoManager {
                             }
                             //System.out.println("nilai min" + min);
                         }
-            //            System.out.println("Rule "+(k+1)+" : "+rules.get(k).get(l)+" f_anggota : "+m_keanggotaan[k][l]);
+                        //System.out.println("Rule "+(k+1)+" : "+rules.get(k).get(l)+" f_anggota : "+m_keanggotaan[k][l]);
                     }
                 }
                 listm_keanggotaan.add(m_keanggotaan);
@@ -545,9 +545,10 @@ public class PSOTsukamotoManager {
                     tingkat_akurasi[i]++;
                 }
             }
+            
             tingkat_akurasi[i] = (tingkat_akurasi[i] / data_cuaca.size()) * 100;
             tingkat_akurasi[i] = Double.parseDouble(String.format("%.3f", tingkat_akurasi[i]).replace(",", "."));
-            System.out.println("tingkat akurasi = " + tingkat_akurasi[i]);
+            //System.out.println("tingkat akurasi = " + tingkat_akurasi[i]);
         }
         
         int i,j,index=0,length=0,counter=0;
@@ -578,17 +579,22 @@ public class PSOTsukamotoManager {
     
     public void pso_fuzzzifikasi(int training, int testing) {
         double[] akurasi_before, akurasi_current;
+        double temp = 0;
+        int i, index = 0, index_swarm = 0;
+        
         bangkit_swarm(jumlah_swarm);
         do_fuzzyfikasi(training,testing);
         do_hitung_fuzzy_tsukamoto();
         akurasi_before = agregasi();
-        double temp = 0;
-        int i, index = 0;
+        
         init_kecepatan();
         init_pbest();
         init_gbest(akurasi_before);
+        
         ArrayList<double []> a=new ArrayList<>();
-           f_anggota_cuaca_baru=new ArrayList<>();
+        f_anggota_cuaca_baru=new ArrayList<>();
+        
+        max_akurasi = -1;
         for (i = 0; i < jumlah_iterasi; i++) {
             menghitung_nilai_w(i);
             menghitung_nilai_r();
@@ -598,25 +604,33 @@ public class PSOTsukamotoManager {
             do_fuzzyfikasi(training,testing);
             do_hitung_fuzzy_tsukamoto();
             akurasi_current = agregasi();
-            if(max_akurasi!=akurasi_current){
-             index=i;   
+       
+            for (int j = 0; j < akurasi_current.length; j++) {
+                if (max_akurasi < akurasi_current[j]) {
+                    max_akurasi = akurasi_current[j];
+                    
+                    index = i;
+                    index_swarm = j;
+                }
             }
+            
             menentukan_pbest(akurasi_before, akurasi_current);
             menentukan_gbest(akurasi_before, akurasi_current);
-            //System.out.println("nilai w : " + w);
-            //System.out.println("nilai r1 : " + r1);
-            //System.out.println("nilai r2 : " + r2);
-            max_akurasi = akurasi_current;
+//            System.out.println("nilai w : " + w);
+//            System.out.println("nilai r1 : " + r1);
+//            System.out.println("nilai r2 : " + r2);
+            akurasi_before = akurasi_current;
         }
        
         //System.out.println("index");
         //System.out.println(index);
        
-            for (int k = 0; k <f_anggota_lama.length; k++) {
-                    System.out.print(f_anggota_cuaca_baru.get(index)[0][k]+"\t");
-                    f_anggota_lama[k] = f_anggota_cuaca_baru.get(index)[0][k];
-            }
-            System.out.println("");
+        System.out.println("fungsi keanggotaan akhir : ");
+        for (int k = 0; k <f_anggota_lama.length; k++) {
+            System.out.print(f_anggota_cuaca_baru.get(index)[index_swarm][k]+"\t");
+            f_anggota_lama[k] = f_anggota_cuaca_baru.get(index)[index_swarm][k];
+        }
+        System.out.println("");
     }
 
     public double[] get_anggota_lama()
@@ -625,16 +639,7 @@ public class PSOTsukamotoManager {
     }
     
     public double get_akurasi() {
-        double temp = 0;
-        int i;
-
-        for (i = 0; i < max_akurasi.length; i++) {
-            if (max_akurasi[i] > temp) {
-                temp = max_akurasi[i]; 
-           }
-        }
-
-        return temp;
+        return max_akurasi;
     }
 
     public void menghitung_nilai_w(int current_iterasi) {
@@ -705,12 +710,12 @@ public class PSOTsukamotoManager {
         for (int i = 0; i < jumlah_swarm; i++) {
             for (int j = 0; j < 12; j++) {
                 if (akurasi_before[i] < akurasi_current[i]) {
-                    pbest[i][j] = pbest[i][j];
-                    //System.out.println("nilai pbest[ " + i + "] :" + pbest[i][j]);
+                    pbest[i][j] = f_anggota_swarm[i][j];
+                    //System.out.println("nilai pbest[" + i + "] :" + pbest[i][j]);
                 }
             }
         }
-        pbest_before = pbest;
+        //pbest_before = pbest;
     }
 
     public void menentukan_gbest(double[] akurasi_before, double[] akurasi_current) {
@@ -737,7 +742,8 @@ public class PSOTsukamotoManager {
         for (int i = 0; i < jumlah_swarm; i++) {
             for (int j = 0; j < 12; j++) {
                 v[i][j] = (v[i][j] * w) + ((c1 * r1) * (pbest[i][j] - f_anggota_swarm[i][j])) + ((c2 * r2) * (gbest[j] - f_anggota_swarm[i][j]));
-                //System.out.println("nilai v = " + v[i][j]);
+                
+                //System.out.println("nilai v[" +i+ "]["+j+"]: " + v[i][j]);
             }
         }
     }
