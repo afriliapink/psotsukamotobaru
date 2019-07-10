@@ -179,11 +179,11 @@ public class PSOTsukamotoManager {
             }
         }
         for (int i = 0; i < swarm; i++) {
-            System.out.print("Swarm " + (i + 1) + " : ");
+            //System.out.print("Swarm " + (i + 1) + " : ");
             for (int j = 0; j < 12; j++) {
-                System.out.print(f_anggota_swarm[i][j] + " ");
+                //System.out.print(f_anggota_swarm[i][j] + " ");
             }
-            System.out.println();
+            //System.out.println();
         }
         return f_anggota_swarm;
     }
@@ -329,18 +329,18 @@ public class PSOTsukamotoManager {
                     f_keanggotaan_cuaca[j][11] = 1;
                 }
             }
-            System.out.println("swarm ke-" + (i + 1) + " ");
-            System.out.println("Fuzzifikasi : ");
+            //System.out.println("swarm ke-" + (i + 1) + " ");
+            //System.out.println("Fuzzifikasi : ");
             for (int j = 0; j < training; j++) {
                 System.out.print("Data " + (j + 1) + " ");
                 for (int k = 0; k < 12; k++) {
-                    System.out.print(f_keanggotaan_cuaca[j][k] + " ");
+              //      System.out.print(f_keanggotaan_cuaca[j][k] + " ");
                 }
-                System.out.println();
+                //System.out.println();
             }
             f_anggota_cuaca_swarm.add(f_keanggotaan_cuaca);
         }
-        System.out.println();
+        //System.out.println();
     }
 
     public void init_rules(ArrayList<ArrayList> rule) {
@@ -357,10 +357,12 @@ public class PSOTsukamotoManager {
         listm_keanggotaan_swarm = new ArrayList<>();
 
         for (int i = 0; i < jumlah_swarm; i++) {
+          //  System.out.println("swarm ke: " +(i+1)) ;
             f_anggota_cuaca = f_anggota_cuaca_swarm.get(i);
             listm_keanggotaan = new ArrayList<>();
 
             for (int j = 0; j < f_anggota_cuaca.length; j++) {
+                System.out.println("data ke : " + (j+1));
                 m_keanggotaan = new double[rules.size()][rules.get(0).size()];
 
                 for (int k = 0; k < rules.size(); k++) {
@@ -421,7 +423,7 @@ public class PSOTsukamotoManager {
                             }
                             //System.out.println("nilai min" + min);
                         }
-                        //System.out.println("Rule "+(k+1)+" : "+rules.get(k).get(l)+" f_anggota : "+m_keanggotaan[k][l]);
+            //            System.out.println("Rule "+(k+1)+" : "+rules.get(k).get(l)+" f_anggota : "+m_keanggotaan[k][l]);
                     }
                 }
                 listm_keanggotaan.add(m_keanggotaan);
@@ -444,8 +446,12 @@ public class PSOTsukamotoManager {
         double total, z, x1, x2, x3, x4;
         DecimalFormat format = new DecimalFormat("####,##");
 
-        hasil_cuaca = new String[listm_keanggotaan_swarm.size()][listm_keanggotaan_swarm.get(0).size()];
+        hasil_cuaca = new String[listm_keanggotaan_swarm.size()][listm_keanggotaan_swarm.get(0).size()]; //swarm + jumlah  data
         tingkat_akurasi = new double[jumlah_swarm];
+        x1 = 0;
+        x2 = 0;
+        x3 = 0;
+        x4 = 0;
 
         for (int i = 0; i < listm_keanggotaan_swarm.size(); i++) {
             listm_keanggotaan = listm_keanggotaan_swarm.get(i);
@@ -463,10 +469,7 @@ public class PSOTsukamotoManager {
 //                }
                 total = 0;
                 z = 0;
-                x1 = 0;
-                x2 = 0;
-                x3 = 0;
-                x4 = 0;
+                
                 for (int k = 0; k < m_keanggotan_rule.length; k++) {
                     if (rules.get(k).get(4).equals("Rain")) {
                         z = (m_keanggotan_rule[k][4] * hujan);
@@ -537,7 +540,7 @@ public class PSOTsukamotoManager {
                 } else {
                     hasil_cuaca[i][j] = "Rain";
                 }
-                System.out.println(hasil_cuaca[i][j]);
+                //System.out.println(hasil_cuaca[i][j]);
                 if (data_cuaca.get(j).getKeadaan_cuaca().equals(hasil_cuaca[i][j])) {
                     tingkat_akurasi[i]++;
                 }
@@ -557,9 +560,9 @@ public class PSOTsukamotoManager {
             }
         }
         
-        System.out.println("Best in = "+index);
+        //System.out.println("Best in = "+index);
         length = hasil_cuaca[0].length;
-        System.out.println("L = "+length);
+        //System.out.println("L = "+length);
         Best_Hasil_Cuaca = new String[length];
         for(j=0;j<hasil_cuaca[0].length;j++){
             Best_Hasil_Cuaca[j] = hasil_cuaca[index][j];
@@ -600,14 +603,14 @@ public class PSOTsukamotoManager {
             }
             menentukan_pbest(akurasi_before, akurasi_current);
             menentukan_gbest(akurasi_before, akurasi_current);
-            System.out.println("nilai w : " + w);
-            System.out.println("nilai r1 : " + r1);
-            System.out.println("nilai r2 : " + r2);
+            //System.out.println("nilai w : " + w);
+            //System.out.println("nilai r1 : " + r1);
+            //System.out.println("nilai r2 : " + r2);
             max_akurasi = akurasi_current;
         }
        
-        System.out.println("index");
-        System.out.println(index);
+        //System.out.println("index");
+        //System.out.println(index);
        
             for (int k = 0; k <f_anggota_lama.length; k++) {
                     System.out.print(f_anggota_cuaca_baru.get(index)[0][k]+"\t");
@@ -668,7 +671,7 @@ public class PSOTsukamotoManager {
         for (int i = 0; i < jumlah_swarm; i++) {
             for (int j = 0; j < 12; j++) {
                 pbest[i][j] = f_anggota_swarm[i][j];
-                System.out.println("nilai pbest[ " + i + "] :" + pbest[i][j]);
+                //System.out.println("nilai pbest[ " + i + "] :" + pbest[i][j]);
             }
         }
 
@@ -692,7 +695,7 @@ public class PSOTsukamotoManager {
 
         for (int i = 0; i < f_anggota_swarm[0].length; i++) {
             gbest[i] = f_anggota_swarm[idx_max][i];
-            System.out.println("nilai gbest[ " + i + "] :" + gbest[i]);
+            //System.out.println("nilai gbest[ " + i + "] :" + gbest[i]);
         }
     }
 
@@ -703,7 +706,7 @@ public class PSOTsukamotoManager {
             for (int j = 0; j < 12; j++) {
                 if (akurasi_before[i] < akurasi_current[i]) {
                     pbest[i][j] = pbest[i][j];
-                    System.out.println("nilai pbest[ " + i + "] :" + pbest[i][j]);
+                    //System.out.println("nilai pbest[ " + i + "] :" + pbest[i][j]);
                 }
             }
         }
@@ -725,7 +728,7 @@ public class PSOTsukamotoManager {
 
         for (int i = 0; i < f_anggota_swarm[0].length; i++) {
             gbest[i] = pbest[idx_max][i];
-            System.out.println("nilai gbest[" + i + "] : " + gbest[i]);
+            //System.out.println("nilai gbest[" + i + "] : " + gbest[i]);
         }
     }
 
@@ -734,7 +737,7 @@ public class PSOTsukamotoManager {
         for (int i = 0; i < jumlah_swarm; i++) {
             for (int j = 0; j < 12; j++) {
                 v[i][j] = (v[i][j] * w) + ((c1 * r1) * (pbest[i][j] - f_anggota_swarm[i][j])) + ((c2 * r2) * (gbest[j] - f_anggota_swarm[i][j]));
-                System.out.println("nilai v = " + v[i][j]);
+                //System.out.println("nilai v = " + v[i][j]);
             }
         }
     }
@@ -745,7 +748,7 @@ public class PSOTsukamotoManager {
         for (int i = 0; i < jumlah_swarm; i++) {
             for (int j = 0; j < 12; j++) {
                 f_anggota_swarm[i][j] = f_anggota_swarm[i][j] + v[i][j];
-                System.out.println("nilai anggota swarm[" + i + "][" + j + "] :" + f_anggota_swarm[i][j]);
+                //System.out.println("nilai anggota swarm[" + i + "][" + j + "] :" + f_anggota_swarm[i][j]);
             }
         }
         f_anggota_cuaca_baru.add(f_anggota_swarm);

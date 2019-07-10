@@ -185,14 +185,16 @@ public class TsukamotoManager {
             count++;
             //f_anggota_cuaca_cuaca.add(f_keanggotaan_cuaca);
         }
-        System.out.println("Fuzzifikasi : ");
-        for (int j = 0; j < testing; j++) {
+        
+        //System.out.println("Fuzzifikasi : ");
+        //for (int j = 0; j < testing; j++) {
            // System.out.print("Data " + (j + 1) + " ");
-            for (int k = 0; k < 12; k++) {
-                System.out.print(String.format("%.2f", f_keanggotaan_cuaca[j][k]).replace(",", ".") + " ");
-            }
-            System.out.println();
-        }
+            //for (int k = 0; k < 12; k++) {
+                //System.out.print(String.format("%.2f", f_keanggotaan_cuaca[j][k]).replace(",", ".") + " ");
+               // System.out.println("f_anggot_lama : "+ f_anggota_lama[k]);
+            //}
+            //System.out.println();
+       // }
     }
 
     public void do_hitung_fuzzy_tsukamoto(int training, int testing) {
@@ -202,8 +204,8 @@ public class TsukamotoManager {
 
         ArrayList<Double[][]> listm_keanggotan;
         f_anggota_cuaca = new double[f_keanggotaan_cuaca.length][f_keanggotaan_cuaca[0].length];
-        System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca.length);
-        System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca[0].length);
+        System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca.length); //jumlah swarm
+        System.out.println("f_anggota_cuaca" + f_keanggotaan_cuaca[0].length); // jumlah data
         m_keanggotaan_baru = new ArrayList<>();
         hasil_cuaca = new String[testing];
         for (int i = 0; i < testing; i++) {
