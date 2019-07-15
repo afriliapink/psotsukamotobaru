@@ -8,7 +8,7 @@ package prediksi.Controller;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
-import prediksi.boundary.InterfaceManager;
+import prediksi.controller.InterfaceManager;
 import prediksi.entity.Cuaca;
 
 /**
@@ -23,7 +23,7 @@ public class PSOTsukamotoManager {
     int min_kecepatan_angin, max_suhu, max_kelembaban;
     int max_tekanan_udara, max_kecepatan_angin;
     int cerah, berawan, hujan_ringan, hujan;
-    int jumlah_swarm, jumlah_iterasi, v0, iterasi;
+    int jumlah_swarm, jumlah_iterasi, v0, iterasi, panjang_partikel;
     double wmax, wmin, r1, r2, c1, c2;
     double w, max_akurasi;
     double[][] v;
@@ -68,6 +68,7 @@ public class PSOTsukamotoManager {
         v0 = 0;
         wmax = 0.9;
         wmin = 0.4;
+        panjang_partikel = 12;
         this.jumlah_swarm = jumlah_swarm;
         this.jumlah_iterasi = jumlah_iterasi;
         this.c1 = c1;
@@ -84,7 +85,7 @@ public class PSOTsukamotoManager {
         Random r = new Random();
         double wk = r.nextDouble();
         int pilih;
-        int panjang_partikel = 12;
+        
         f_anggota_swarm = new double[swarm][panjang_partikel];
         double[] temp, temp1;
        // DecimalFormat format = new DecimalFormat("####,####");
@@ -587,9 +588,9 @@ public class PSOTsukamotoManager {
         do_hitung_fuzzy_tsukamoto();
         akurasi_before = agregasi();
         
-        for (int j = 0; j < akurasi_before.length; j++) {
-            System.out.println("tingkat akurasi : "+ akurasi_before[j]);
-        }
+//        for (int j = 0; j < akurasi_before.length; j++) {
+//            System.out.println("tingkat akurasi : "+ akurasi_before[j]);
+//        }
         
         init_kecepatan();
         init_pbest();
@@ -609,9 +610,9 @@ public class PSOTsukamotoManager {
             do_hitung_fuzzy_tsukamoto();
             akurasi_current = agregasi();
             
-            for (int j = 0; j < akurasi_before.length; j++) {
-                System.out.println("tingkat akurasi : "+ akurasi_current[j]);
-            }
+//            for (int j = 0; j < akurasi_before.length; j++) {
+//                System.out.println("tingkat akurasi : "+ akurasi_current[j]);
+//            }
             
             menentukan_pbest(akurasi_before, akurasi_current);
             menentukan_gbest(akurasi_before, akurasi_current);
@@ -759,7 +760,7 @@ public class PSOTsukamotoManager {
         int count, count_limit;
         
         for (int i = 0; i < jumlah_swarm; i++) {
-            for (int j = 0; j < 12; j++) {
+            for (int j = 0; j < panjang_partikel; j++) {
                 f_anggota_swarm[i][j] = f_anggota_swarm[i][j] + v[i][j];
                 
                 if (j >= 0 && j < 3) {

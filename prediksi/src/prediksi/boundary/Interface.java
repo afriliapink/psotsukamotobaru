@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package prediksi;
+package prediksi.boundary;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import prediksi.boundary.InterfaceManager;
+import prediksi.controller.InterfaceManager;
 import prediksi.entity.Cuaca;
 
 /**
@@ -402,9 +403,18 @@ public class Interface extends javax.swing.JFrame {
 
     private void btn_hasilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_hasilActionPerformed
         int pilihan = Metode.getSelectedIndex();
+        double akurasi;
+        String[] hasilcuaca;
         if (pilihan == 0) {
             System.out.println("Choose Tsukamoto");
-            interface_manager.dofuzzysaja(persentase2, tbl_data);
+            interface_manager.dofuzzysaja();
+            akurasi = interface_manager.get_akurasi();
+            persentase2.setText(String.valueOf(akurasi + " %"));
+            DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
+            hasilcuaca = interface_manager.get_prediksi();
+            for(int i=0;i<hasilcuaca.length;i++){
+                cuaca_model.setValueAt(hasilcuaca[i], i, 7);
+            }
         } else if (pilihan==1){
             System.out.println("Choose PSO+Tsukamoto");
             if (check_parameter() == false) {
@@ -412,7 +422,14 @@ public class Interface extends javax.swing.JFrame {
                 int jum_iterasi = Integer.parseInt(tf_jumlahiterasi.getText());
                 int c1 = Integer.parseInt(tf_c1.getText());
                 int c2 = Integer.parseInt(tf_c2.getText());
-                interface_manager.do_pso(jum_swarm, c1, c2, jum_iterasi, persentasePSO, tbl_data);
+                interface_manager.do_pso(jum_swarm, c1, c2, jum_iterasi);
+                akurasi = interface_manager.get_akurasi();
+                persentasePSO.setText(String.valueOf(akurasi + " %"));
+                DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
+                hasilcuaca = interface_manager.get_prediksi();
+                for(int i=0;i<hasilcuaca.length;i++){
+                    cuaca_model.setValueAt(hasilcuaca[i], i, 8);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Parameter not null",
                         "Error", JOptionPane.ERROR_MESSAGE);

@@ -8,7 +8,6 @@ package prediksi.controller;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
-import prediksi.boundary.InterfaceManager;
 import prediksi.entity.Cuaca;
 
 /**

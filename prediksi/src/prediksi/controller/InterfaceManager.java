@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package prediksi.boundary;
+package prediksi.controller;
 
 import java.awt.Component;
 import java.io.File;
@@ -34,6 +34,8 @@ public class InterfaceManager {
     PSOTsukamotoManager TM;
     TsukamotoManager F;
     int len,testing,training;
+    double akurasi;
+    String[] hasilcuaca;
     
     public void Load_Data(JTable tbl_data, JTextField Namafile) {
 //        ArrayList<Cuaca> data_cuaca;
@@ -122,7 +124,6 @@ public class InterfaceManager {
         ArrayList<String> kolom_list;
 
         int baris_excel, kolom_excel;
-
         String path = System.getProperty("user.dir") + "\\data\\rulescuaca.xlsx";
         System.out.println(path);
         excel_manager = new DokumenManager();
@@ -142,7 +143,7 @@ public class InterfaceManager {
         return rules_dokumen;
     }
 
-    public void do_pso(int jumlah_swarm, double c1, double c2, int jumlah_iterasi, JLabel persentase, JTable tbl_data) {
+    public void do_pso(int jumlah_swarm, double c1, double c2, int jumlah_iterasi) {
         muat_rules();
         Cuaca cuaca;
         int i;
@@ -150,21 +151,24 @@ public class InterfaceManager {
         TM = new PSOTsukamotoManager(jumlah_swarm, c1, c2, jumlah_iterasi);
         F=new TsukamotoManager();
 //        TM.bangkit_swarm(jumlah_swarm);
+        TM.init_rules(rules_dokumen);
         TM.init_cuaca(data_cuaca);
 //        TM.do_fuzzyfikasi();
-        TM.init_rules(rules_dokumen);
 //        TM.do_hitung_fuzzy_tsukamoto();
 //        TM.agregasi();
         TM.pso_fuzzzifikasi(training,testing);
+        double[] baru = TM.get_anggota_lama();
         
         
         F.init_rules(rules_dokumen); //passing value to F
         F.init_cuaca(data_cuaca);
-        F.set_anggota_lama(TM.get_anggota_lama());
+        
+        F.set_anggota_lama(baru);
         F.do_fuzzyfikasi(training,testing);
         F.do_hitung_fuzzy_tsukamoto(training,testing);
-        persentase.setText(String.valueOf(F.agregasi(training,testing) + " %"));
-        String[] hasilcuaca = F.get_hasil_cuaca();
+        //persentase.setText(String.valueOf(F.agregasi(training,testing) + " %"));
+        akurasi = F.agregasi(training, testing);
+        hasilcuaca = F.get_hasil_cuaca();
                 //persentase.setText(String.valueOf(TM.get_akurasi() + " %"));
                 //String[] hasil_cuaca = TM.Get_Hasil_Cuaca();
         //show to table
@@ -180,15 +184,15 @@ public class InterfaceManager {
             //        cuaca_model.setValueAt(hasil_cuaca[i], i, 8);
             //}
             
-            DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
-       
-        for(i=0;i<hasilcuaca.length;i++){
+//            DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
+//       
+//        for(i=0;i<hasilcuaca.length;i++){
 //            System.out.println(hasilcuaca[i]);
-            cuaca_model.setValueAt(hasilcuaca[i], i, 8);
-        }
+//            cuaca_model.setValueAt(hasilcuaca[i], i, 8);
+//        }
     }
 
-    public void dofuzzysaja(JLabel persentase, JTable tbl_data) {
+    public void dofuzzysaja() {
         muat_rules();
         //Cuaca cuaca;
         int i;
@@ -198,16 +202,24 @@ public class InterfaceManager {
         F.do_fuzzyfikasi(training,testing);
         F.do_hitung_fuzzy_tsukamoto(training,testing);
         //F.agregasi();
-        persentase.setText(String.valueOf(F.agregasi(training,testing) + " %"));
-        String[] hasilcuaca = F.get_hasil_cuaca();
+        akurasi = F.agregasi(training, testing);
+//        persentase.setText(String.valueOf(F.agregasi(training,testing) + " %"));
+        hasilcuaca = F.get_hasil_cuaca();
         //show to table
-        DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
-       
-        for(i=0;i<hasilcuaca.length;i++){
+//        DefaultTableModel cuaca_model = (DefaultTableModel) tbl_data.getModel();
+//       
+//        for(i=0;i<hasilcuaca.length;i++){
 //            System.out.println(hasilcuaca[i]);
-            cuaca_model.setValueAt(hasilcuaca[i], i, 7);
-        }
+//            cuaca_model.setValueAt(hasilcuaca[i], i, 7);
+//        }
        
     }
+    
+    public double get_akurasi(){
+        return akurasi;
+    }
 
+    public String[] get_prediksi(){
+        return hasilcuaca;
+    }
 }
