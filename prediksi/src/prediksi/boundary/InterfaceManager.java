@@ -32,7 +32,7 @@ public class InterfaceManager {
     ArrayList<String> newList;
     String[][] rule;
     PSOTsukamotoManager TM;
-    TsukamotoManager F=new TsukamotoManager();
+    TsukamotoManager F;
     int len,testing,training;
     
     public void Load_Data(JTable tbl_data, JTextField Namafile) {
@@ -148,6 +148,7 @@ public class InterfaceManager {
         int i;
 
         TM = new PSOTsukamotoManager(jumlah_swarm, c1, c2, jumlah_iterasi);
+        F=new TsukamotoManager();
 //        TM.bangkit_swarm(jumlah_swarm);
         TM.init_cuaca(data_cuaca);
 //        TM.do_fuzzyfikasi();

@@ -191,7 +191,7 @@ public class TsukamotoManager {
            // System.out.print("Data " + (j + 1) + " ");
             //for (int k = 0; k < 12; k++) {
                 //System.out.print(String.format("%.2f", f_keanggotaan_cuaca[j][k]).replace(",", ".") + " ");
-               // System.out.println("f_anggot_lama : "+ f_anggota_lama[k]);
+                //System.out.println("f_anggot_lama : "+ f_anggota_lama[k]);
             //}
             //System.out.println();
        // }
@@ -434,7 +434,7 @@ public class TsukamotoManager {
         }
         tingkat_akurasi = (tingkat_akurasi / testing) * 100;
         tingkat_akurasi = Double.parseDouble(String.format("%.3f", tingkat_akurasi).replace(",", "."));
-        //System.out.println("tingkat akurasi = " + tingkat_akurasi);
+        System.out.println("tingkat akurasi = " + tingkat_akurasi);
         return tingkat_akurasi;
     }
 
